@@ -3,6 +3,7 @@ import axios from 'axios';
 import Edit from './components/Edit.vue'
 import {onMounted,ref} from 'vue'
 
+
 // TODO: 列表渲染
 //思路：声明一个响应数据 ->调用接口获取数据 -> 后端数据赋值给list -> 绑定到table组件
 
@@ -17,10 +18,25 @@ const getList =async() =>{
  onMounted(() =>getList() )
 
 // TODO: 删除功能
+//思路：获取当前行id -> 通过id调用删除接口 -> 更新到最新的列表
+const onDelete =async(id) =>{
+    console.log(id);
+    //调用删除接口
+    await axios.delete(`/del/${id}`)
+    //更新到最新列表
+    getList()
+}
 
 
 // TODO: 编辑功能
+//思路：打开弹框 ->回填数据 ->更新数据
 
+//1.打开弹框（获取子组件实例 调用方法或者修改属性）
+//2.回调数据（调用详情接口/当前行的静态数据）
+const editRef =ref(null)
+const onEdit =(row)=>{
+  editRef.value.open(row)
+}
 </script>
 
 <template>
@@ -30,14 +46,14 @@ const getList =async() =>{
       <el-table-column label="姓名" prop="name" width="150"></el-table-column>
       <el-table-column label="籍贯" prop="place"></el-table-column>
       <el-table-column label="操作" width="150">
-        <template #default>
-          <el-button type="primary" link>编辑</el-button>
-          <el-button type="danger" link>删除</el-button>
+        <template #default="{row}">
+          <el-button type="primary" link @Click="onEdit(row)">编辑</el-button>
+          <el-button type="danger" link @Click="onDelete(row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <Edit />
+  <Edit ref="editRef" />
 </template>
 
 <style scoped>

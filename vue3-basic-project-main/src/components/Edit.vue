@@ -3,7 +3,13 @@
 import { ref } from 'vue'
 // 弹框开关
 const dialogVisible = ref(false)
-
+const open=(row) =>{
+  console.log(row);
+    dialogVisible.value=true
+}
+defineExpose({
+  open
+})
 
 </script>
 
